@@ -10,11 +10,13 @@ function Hotels({
   freeBreakfast = 1,
   freeWifi = true,
   rating = 4,
+  location="location",
+  image="..\src\assets\hotel.jpg"
 }) {
   return (
     <div className=" flex  mx-8 border-slate-100 border-2">
       <div className=" mr-4">
-        <img className=" h-48 w-62" src="..\src\assets\hotel.jpg"></img>
+        <img className=" h-48 w-62" src={image}></img>
       </div>
       <div className="flex flex-col space-y-4">
         <div className=" text-2xl">{name}</div>
@@ -23,7 +25,7 @@ function Hotels({
             <FaStar className="text-blue-400" key={index} />
           ))}
           <IoLocationSharp className=" ml-4" />
-          <div className=" text-sm">location</div>
+          <div className=" text-sm">{location}</div>
         </div>
         <div className="flex mt-2">
           <MdFreeBreakfast className=" text-xl mr-1" />

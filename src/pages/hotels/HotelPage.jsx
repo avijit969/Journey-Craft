@@ -24,9 +24,10 @@ export class HotelPage extends Component {
           </div>
           </div>
           <div className=" flex flex-col space-y-6">
-            <Hotels name="Avijit's hotel" />
-            <Hotels name="Disha's hotel" />
-            <Hotels />
+            <Hotels name="Avijit's hotel" freeWifi={true} location='Puri' image="https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"/>
+            <Hotels name="Balraj's hotel" image='https://images.pexels.com/photos/2034335/pexels-photo-2034335.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'/>
+            <Hotels name="Komal's hotel" image='https://images.pexels.com/photos/1579739/pexels-photo-1579739.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' />
+            <Hotels image='https://images.pexels.com/photos/1743231/pexels-photo-1743231.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2' />
           </div>
         </div>
     )
