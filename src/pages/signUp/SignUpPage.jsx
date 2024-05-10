@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import backgroundImage from "./bg.jpg"; // Import the local image
 import axios from "axios";
-import toast from "react-hot-toast";
-import { useLocation } from "react-router-dom";
-function SignUpPage({pageType}) {
+import toast ,{Toaster}from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+
+function SignUpPage() {
   const backgroundStyle = {
     backgroundImage: `url(${backgroundImage})`,
     backgroundSize: "cover",
@@ -14,7 +15,7 @@ function SignUpPage({pageType}) {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
-  // const { pathname } = useLocation();
+  const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = {
@@ -27,26 +28,30 @@ function SignUpPage({pageType}) {
     var config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "http://localhost:3000/api/v1/users/registerUser",
+      url: `${import.meta.env.VITE_BACKEND_BASE_URL}/users/registerUser`,
       data: data,
+      withCredentials: true,
     };
     axios(config)
       .then(function (response) {
-        console.log(JSON.stringify(response.data));
-        toast.success(JSON.stringify(response.data).message);
+        toast.success(response.data.message);
+        navigate("/login");
       })
       .catch(function (error) {
-        console.log(error.toJSON().status);
-
+        const statusCode = error.toJSON().status;
+        if (statusCode === 401) {
+          toast.error("User with email or username already exists . Try another one!");
+        } else if (statusCode === 400) {
+          toast.error("All fields are required !");
+        }
+        else{
+          toast.error("something went wrong! please try again later.")
+        }
       });
-    // Here you can implement your login logic
-    console.log("Email:", email);
-    console.log("Password:", password);
-    console.log("username:", username);
-    console.log("fullName:", fullName);
   };
   return (
     <div className=" bg-blue-300 min-w-screen min-h-screen p-8 ">
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="bg-white m-1 rounded-xl flex justify-between">
         <div className=" w-1/2 m-12 rounded-xl" style={backgroundStyle}>
           <h3 className=" font-bold text-2xl my-40 mx-8 text-white">

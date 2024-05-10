@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import backgroundImage from "./bg.jpg"; // Import the local image
 import axios from "axios";
-import toast from "react-hot-toast";
-function LoginPage({ pageType }) {
+import toast, { Toaster } from "react-hot-toast";
+import {useDispatch} from "react-redux"
+import {useNavigate} from 'react-router-dom'
+import { login } from "../../store/authSclice";
+function LoginPage() {
   const backgroundStyle = {
     backgroundImage: `url(${backgroundImage})`,
     backgroundSize: "cover",
@@ -10,6 +13,8 @@ function LoginPage({ pageType }) {
   };
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = {
@@ -19,23 +24,30 @@ function LoginPage({ pageType }) {
     console.log(data);
     const config = {
       method: "post",
-      maxBodyLength: Infinity,
-      url: "http://localhost:3000/api/v1/users/login",
+      url: `${import.meta.env.VITE_BACKEND_BASE_URL}/users/login`,
       data: data,
+      withCredentials: true,
     };
     axios(config)
       .then(function (response) {
         console.log(response.data);
+        toast.success(response.data.message);
+        dispatch(login(response.data))
+        navigate("/")
       })
       .catch(function (error) {
-        console.log(error.toJSON().status);
-        toast.error(Error.message);
+        console.log(error)
+        const statusCode = error.toJSON().status;
+        if (statusCode === 401) {
+          toast.error("User does not exist !");
+        } else if (statusCode === 402) {
+          toast.error("Invalid user credentials !");
+        }
       });
-    console.log("Password:", password);
-    console.log("username:", username);
   };
   return (
     <div className=" bg-blue-300 min-w-screen min-h-screen p-16 ">
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="bg-white rounded-xl flex justify-between">
         <div className=" w-1/2 m-12 rounded-xl" style={backgroundStyle}>
           <h3 className=" font-bold text-2xl my-40 mx-8 text-white">
@@ -115,6 +127,12 @@ function LoginPage({ pageType }) {
               >
                 Login In
               </button>
+              <p className="mt-2 text-center text-sm text-gray-600">
+                Don't have an account?{" "}
+                <a href="/signup" className="font-medium text-indigo-600 hover:text-indigo-500">
+                  Sign Up
+                </a>
+              </p>
             </div>
           </form>
         </div>
